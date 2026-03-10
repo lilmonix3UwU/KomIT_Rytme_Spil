@@ -13,8 +13,9 @@ public class PlayerController1 : MonoBehaviour
     float negSpeedMod = 1f;
     List<float> posSpeedMods;
     float posSpeedMod = 1f;
+    [SerializeField] float maxFallSpeed;
     bool canJump = true;
-    bool facingRight = true;
+    public bool facingRight = true;
 
 
     private void Start()
@@ -28,7 +29,15 @@ public class PlayerController1 : MonoBehaviour
     void Update()
     {
 
-        rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * moveSpeed * posSpeedMod * negSpeedMod * Time.deltaTime, rb.velocity.y);
+        
+        if (rb.velocity.y < -maxFallSpeed)
+        {
+            rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * moveSpeed * posSpeedMod * negSpeedMod * Time.deltaTime, -maxFallSpeed);
+        }
+        else
+        {
+            rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * moveSpeed * posSpeedMod * negSpeedMod * Time.deltaTime, rb.velocity.y);
+        }
 
         if (canJump && groundCheck.isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
@@ -36,19 +45,18 @@ public class PlayerController1 : MonoBehaviour
             groundCheck.isGrounded = false;
         }
 
-        if (rb.velocity.x > 0 && !facingRight)
+
+
+        if (rb.velocity.x > 0.5f && !facingRight)
         {
             facingRight = true;
+            transform.localScale = new Vector3(1, 1, 1);
         }
-        else if (rb.velocity.x < 0 && facingRight)
+        else if (rb.velocity.x < -0.5f && facingRight)
         {
             facingRight = false;
+            transform.localScale = new Vector3(-1, 1, 1);
         }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            StartCoroutine(Nudge(1000, 0.1f, true));
-        }
-
 
 
         if (negSpeedMods.Count > 0)
@@ -109,5 +117,13 @@ public class PlayerController1 : MonoBehaviour
         {
             rb.AddForce(new Vector2(-force, 0));
         }
+    }
+
+    public IEnumerator FallSlow(float time)
+    {
+        float tempMaxFallSpeed = maxFallSpeed;
+        maxFallSpeed = 1;
+        yield return new WaitForSeconds(time);
+        maxFallSpeed = tempMaxFallSpeed;
     }
 }
