@@ -5,6 +5,7 @@ using UnityEngine;
 public class Attack : MonoBehaviour
 {
     public float damageMod = 1;
+    float localDMod = 1;
     [SerializeField] float baseDamage;
     [SerializeField] float delay;
     [SerializeField] float animationTime;
@@ -19,16 +20,13 @@ public class Attack : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            AttackStart();
-        }
 
     }
 
 
-    public void AttackStart()
+    public void AttackStart(float dMod)
     {
+        localDMod = dMod;
         StartCoroutine(playerController.AddSpeedMod(0.01f, delay + animationTime));
         StartCoroutine(playerController.Nudge(1000, delay, true));
         StartCoroutine(AttackHitBox());
@@ -52,7 +50,7 @@ public class Attack : MonoBehaviour
     {
         if (collision.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<Enemy>().HP -= baseDamage * damageMod;
+            StartCoroutine(collision.gameObject.GetComponent<Enemy>().TakeDamage(baseDamage * damageMod * localDMod));
         }
     }
 
