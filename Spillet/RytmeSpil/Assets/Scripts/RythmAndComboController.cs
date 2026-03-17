@@ -38,7 +38,6 @@ public class RythmAndComboController : MonoBehaviour
     void Start()
     {
         oneBeat = 60 / BPM;
-        
     }
 
 
@@ -93,7 +92,7 @@ public class RythmAndComboController : MonoBehaviour
 
     private void TryAttack(Attack weapon)
     {
-        Debug.Log("fuck");
+
         if ( (beatTimer > (oneBeat - greatWindow)) || (beatTimer < greatWindow) )
         {
             //display GREAT particle

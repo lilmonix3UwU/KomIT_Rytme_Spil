@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class PlayerController1 : MonoBehaviour
@@ -8,6 +9,8 @@ public class PlayerController1 : MonoBehaviour
     [SerializeField] GroundCheck groundCheck;
     [SerializeField] float moveSpeed;
     [SerializeField] float jummpForce;
+    [SerializeField] Animator animator;
+    public SpriteRenderer spriteRenderer;
     Rigidbody2D rb;
     List<float> negSpeedMods;
     float negSpeedMod = 1f;
@@ -25,19 +28,23 @@ public class PlayerController1 : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
+    private void FixedUpdate()
+    {
+        if (rb.velocity.y <= -maxFallSpeed)
+        {
+            rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * moveSpeed * posSpeedMod * negSpeedMod, -maxFallSpeed);
+        }
+        else
+        {
+            rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * moveSpeed * posSpeedMod * negSpeedMod, rb.velocity.y);
+        }
+    }
 
     void Update()
     {
 
         
-        if (rb.velocity.y < -maxFallSpeed)
-        {
-            rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * moveSpeed * posSpeedMod * negSpeedMod * Time.deltaTime, -maxFallSpeed);
-        }
-        else
-        {
-            rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * moveSpeed * posSpeedMod * negSpeedMod * Time.deltaTime, rb.velocity.y);
-        }
+
 
         if (canJump && groundCheck.isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
@@ -56,6 +63,15 @@ public class PlayerController1 : MonoBehaviour
         {
             facingRight = false;
             transform.localScale = new Vector3(-1, 1, 1);
+        }
+        
+        if ((rb.velocity.x < -0.5f || rb.velocity.x > 0.5f) && groundCheck.isGrounded)
+        {
+            animator.SetBool("Walking", true);
+        }
+        else if (animator.GetBool("Walking"))
+        {
+            animator.SetBool("Walking", false);
         }
 
 

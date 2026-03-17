@@ -9,13 +9,14 @@ public class Attack : MonoBehaviour
     [SerializeField] float baseDamage;
     [SerializeField] float delay;
     [SerializeField] float animationTime;
-    PlayerController1 playerController;
+    [SerializeField] PlayerController1 playerController;
+    [SerializeField] Animator animator;
 
     [SerializeField] GameObject hitbox;
 
     private void Start()
     {
-        playerController = GetComponentInParent<PlayerController1>();
+
     }
 
     private void Update()
@@ -39,11 +40,13 @@ public class Attack : MonoBehaviour
         StartCoroutine(playerController.FallSlow(animationTime));
         GetComponent<BoxCollider2D>().enabled = true;
         hitbox.SetActive(true);
+        animator.SetBool("Attacking", true);
 
         yield return new WaitForSeconds(animationTime);
 
         GetComponent<BoxCollider2D>().enabled = false;
         hitbox.SetActive(false);
+        animator.SetBool("Attacking", false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
