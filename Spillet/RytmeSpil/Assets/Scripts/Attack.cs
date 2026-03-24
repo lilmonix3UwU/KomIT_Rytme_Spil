@@ -11,6 +11,9 @@ public class Attack : MonoBehaviour
     [SerializeField] float animationTime;
     [SerializeField] PlayerController1 playerController;
     [SerializeField] Animator animator;
+    [SerializeField] AudioSource hit1;
+    [SerializeField] AudioSource hit2;
+    [SerializeField] AudioSource hit3;
 
     [SerializeField] GameObject hitbox;
 
@@ -28,21 +31,23 @@ public class Attack : MonoBehaviour
     public void AttackStart(float dMod)
     {
         localDMod = dMod;
-        StartCoroutine(playerController.AddSpeedMod(0.01f, delay + animationTime));
+        StartCoroutine(playerController.AddSpeedMod(0.01f, animationTime));
         StartCoroutine(playerController.Nudge(1000, delay, true));
         StartCoroutine(AttackHitBox());
     }
 
     private IEnumerator AttackHitBox()
     {
-        yield return new WaitForSeconds(delay);
+        animator.SetBool("Attacking", true);
+        StartCoroutine(playerController.FallSlow(animationTime + delay));
 
-        StartCoroutine(playerController.FallSlow(animationTime));
+        yield return new WaitForSeconds(delay);
+        
         GetComponent<BoxCollider2D>().enabled = true;
         hitbox.SetActive(true);
-        animator.SetBool("Attacking", true);
+        
 
-        yield return new WaitForSeconds(animationTime);
+        yield return new WaitForSeconds(animationTime - delay);
 
         GetComponent<BoxCollider2D>().enabled = false;
         hitbox.SetActive(false);

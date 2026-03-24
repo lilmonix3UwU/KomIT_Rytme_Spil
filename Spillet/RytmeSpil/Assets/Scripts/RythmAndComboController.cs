@@ -59,13 +59,13 @@ public class RythmAndComboController : MonoBehaviour
         {
             currentAttackCooldown -= Time.deltaTime;
         }
-
+        /*
         if (Input.GetKeyDown(KeyCode.J) && currentAttackCooldown <= 0)
         {
             TryAttack(flute);
             currentAttackCooldown = attackCooldown;
-        }
-        else if (Input.GetKeyDown(KeyCode.K) && currentAttackCooldown <= 0)
+        }*/
+        if (Input.GetKeyDown(KeyCode.K) && currentAttackCooldown <= 0)
         {
             TryAttack(guitar);
             currentAttackCooldown = attackCooldown;
