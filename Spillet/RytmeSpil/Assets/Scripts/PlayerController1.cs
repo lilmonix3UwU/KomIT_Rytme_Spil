@@ -8,21 +8,24 @@ public class PlayerController1 : MonoBehaviour
 
     [SerializeField] GroundCheck groundCheck;
     [SerializeField] float moveSpeed;
+    [SerializeField] float animationSpeedMod;
     [SerializeField] float jummpForce;
     [SerializeField] Animator animator;
-    public SpriteRenderer spriteRenderer;
     Rigidbody2D rb;
     List<float> negSpeedMods;
     float negSpeedMod = 1f;
     List<float> posSpeedMods;
     float posSpeedMod = 1f;
     [SerializeField] float maxFallSpeed;
+    float currentMaxFallSpeed;
     bool canJump = true;
     public bool facingRight = true;
 
 
     private void Start()
     {
+        
+        currentMaxFallSpeed = maxFallSpeed;
         negSpeedMods = new List<float>();
         posSpeedMods = new List<float>();
         rb = GetComponent<Rigidbody2D>();
@@ -30,9 +33,9 @@ public class PlayerController1 : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (rb.velocity.y <= -maxFallSpeed)
+        if (rb.velocity.y <= -currentMaxFallSpeed)
         {
-            rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * moveSpeed * posSpeedMod * negSpeedMod, -maxFallSpeed);
+            rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * moveSpeed * posSpeedMod * negSpeedMod, -currentMaxFallSpeed);
         }
         else
         {
@@ -50,9 +53,17 @@ public class PlayerController1 : MonoBehaviour
         {
             rb.AddForce(new Vector2(0, 1) * jummpForce, ForceMode2D.Impulse);
             groundCheck.isGrounded = false;
+            animator.SetTrigger("Jump");
         }
 
-
+        if (groundCheck.isGrounded && !animator.GetBool("OnGround"))
+        {
+            animator.SetBool("OnGround", true);
+        }
+        else if (!groundCheck.isGrounded && animator.GetBool("OnGround"))
+        {
+            animator.SetBool("OnGround", false);
+        }
 
         if (rb.velocity.x > 0.5f && !facingRight)
         {
@@ -68,11 +79,16 @@ public class PlayerController1 : MonoBehaviour
         if ((rb.velocity.x < -0.5f || rb.velocity.x > 0.5f) && groundCheck.isGrounded)
         {
             animator.SetBool("Walking", true);
+            if (animator.speed != moveSpeed * animationSpeedMod)
+            {
+                animator.speed = moveSpeed * animationSpeedMod;
+            }
         }
         else if (animator.GetBool("Walking"))
         {
             animator.SetBool("Walking", false);
         }
+
 
 
         if (negSpeedMods.Count > 0)
@@ -137,9 +153,8 @@ public class PlayerController1 : MonoBehaviour
 
     public IEnumerator FallSlow(float time)
     {
-        float tempMaxFallSpeed = maxFallSpeed;
-        maxFallSpeed = 1;
+        currentMaxFallSpeed = 1;
         yield return new WaitForSeconds(time);
-        maxFallSpeed = tempMaxFallSpeed;
+        currentMaxFallSpeed = maxFallSpeed;
     }
 }

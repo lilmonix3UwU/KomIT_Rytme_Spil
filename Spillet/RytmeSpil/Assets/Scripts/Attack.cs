@@ -8,13 +8,12 @@ public class Attack : MonoBehaviour
     float localDMod = 1;
     [SerializeField] float baseDamage;
     [SerializeField] float delay;
-    [SerializeField] float animationTime;
+    public float animationTime;
     [SerializeField] PlayerController1 playerController;
     [SerializeField] Animator animator;
     [SerializeField] AudioSource hit1;
     [SerializeField] AudioSource hit2;
     [SerializeField] AudioSource hit3;
-
     [SerializeField] GameObject hitbox;
 
     private void Start()
@@ -33,10 +32,10 @@ public class Attack : MonoBehaviour
         localDMod = dMod;
         StartCoroutine(playerController.AddSpeedMod(0.01f, animationTime));
         StartCoroutine(playerController.Nudge(1000, delay, true));
-        StartCoroutine(AttackHitBox());
+        StartCoroutine(AttackSequence());
     }
 
-    private IEnumerator AttackHitBox()
+    private IEnumerator AttackSequence()
     {
         animator.SetBool("Attacking", true);
         StartCoroutine(playerController.FallSlow(animationTime + delay));
@@ -47,11 +46,15 @@ public class Attack : MonoBehaviour
         hitbox.SetActive(true);
         
 
-        yield return new WaitForSeconds(animationTime - delay);
-
+        yield return new WaitForSeconds(animationTime - delay - 0.01f);
+        animator.SetBool("Attacking", false);
+        yield return new WaitForSeconds(0.01f);
         GetComponent<BoxCollider2D>().enabled = false;
         hitbox.SetActive(false);
-        animator.SetBool("Attacking", false);
+        if (damageMod > 1)
+        {
+            damageMod = 1;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
