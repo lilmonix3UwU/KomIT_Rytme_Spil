@@ -15,6 +15,7 @@ public class Attack : MonoBehaviour
     [SerializeField] AudioSource hit2;
     [SerializeField] AudioSource hit3;
     [SerializeField] GameObject hitbox;
+    [SerializeField] float pushForce = 5;
 
     private void Start()
     {
@@ -62,6 +63,7 @@ public class Attack : MonoBehaviour
         if (collision.CompareTag("Enemy"))
         {
             StartCoroutine(collision.gameObject.GetComponent<Enemy>().TakeDamage(baseDamage * damageMod * localDMod));
+            collision.gameObject.GetComponent<Rigidbody2D>().AddForce((collision.transform.position - playerController.gameObject.transform.position).normalized * pushForce, ForceMode2D.Impulse);
         }
     }
 

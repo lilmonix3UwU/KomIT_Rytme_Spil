@@ -319,7 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6579157e9a485c7458f68fb5b3a6c390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 30
+  HP: 100
   dmgText: {fileID: 469404787}
 --- !u!82 &6255376
 AudioSource:
@@ -710,7 +710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6579157e9a485c7458f68fb5b3a6c390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 30
+  HP: 100
   dmgText: {fileID: 323872424}
 --- !u!50 &78978390
 Rigidbody2D:
@@ -1471,7 +1471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6579157e9a485c7458f68fb5b3a6c390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 30
+  HP: 100
   dmgText: {fileID: 1043711657}
 --- !u!50 &314973737
 Rigidbody2D:
@@ -2042,7 +2042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6579157e9a485c7458f68fb5b3a6c390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 30
+  HP: 100
   dmgText: {fileID: 1141847309}
 --- !u!50 &344631254
 Rigidbody2D:
@@ -2329,7 +2329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6579157e9a485c7458f68fb5b3a6c390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 30
+  HP: 100
   dmgText: {fileID: 2046405439}
 --- !u!50 &406392222
 Rigidbody2D:
@@ -3525,10 +3525,10 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 5
-  m_LinearDrag: 0
-  m_AngularDrag: 0
+  m_LinearDrag: 0.1
+  m_AngularDrag: 0.1
   m_GravityScale: 2
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 573eb5ca2cb9d7c4a8c6accc1443973f, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -4097,7 +4097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6579157e9a485c7458f68fb5b3a6c390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 30
+  HP: 100
   dmgText: {fileID: 461661445}
 --- !u!50 &965831489
 Rigidbody2D:
@@ -4723,6 +4723,7 @@ MonoBehaviour:
   hit2: {fileID: 0}
   hit3: {fileID: 0}
   hitbox: {fileID: 1005767288}
+  pushForce: 5
 --- !u!1 &1043711656
 GameObject:
   m_ObjectHideFlags: 0
@@ -5022,7 +5023,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6579157e9a485c7458f68fb5b3a6c390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 30
+  HP: 100
   dmgText: {fileID: 1890483232}
 --- !u!50 &1112811507
 Rigidbody2D:
@@ -6069,7 +6070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6579157e9a485c7458f68fb5b3a6c390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 30
+  HP: 100
   dmgText: {fileID: 1340254837}
 --- !u!50 &1447568633
 Rigidbody2D:
@@ -6652,6 +6653,7 @@ MonoBehaviour:
   hit2: {fileID: 0}
   hit3: {fileID: 0}
   hitbox: {fileID: 663567861}
+  pushForce: 100
 --- !u!1 &1686156326
 GameObject:
   m_ObjectHideFlags: 0
@@ -6780,7 +6782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6579157e9a485c7458f68fb5b3a6c390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 30
+  HP: 100
   dmgText: {fileID: 117990626}
 --- !u!50 &1686156329
 Rigidbody2D:
