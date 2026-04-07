@@ -30,6 +30,7 @@ public class RythmAndComboController : MonoBehaviour
     [Header("Other")]
     [SerializeField] float BPM = 90;
     [SerializeField] RectTransform metronome;
+    [SerializeField] RectTransform metronome2;
     [SerializeField] GameObject greatIconT;
     [SerializeField] GameObject okIconT;
     [SerializeField] GameObject yikesIconT;
@@ -53,7 +54,7 @@ public class RythmAndComboController : MonoBehaviour
     float attackCooldown;
     AudioSource metronomeAudioSource;
     PlayerController1 playerController;
-
+    Camera cam;
 
     void Start()
     {
@@ -63,6 +64,7 @@ public class RythmAndComboController : MonoBehaviour
         combos = new List<bool[]>();
         validCombos = new List<bool[]>();
         oneBeat = 60 / BPM;
+        cam = Camera.main;
 
         combos.Add(new bool[] { true, true, false, true });
         combos.Add(new bool[] { true, false, true, true });
@@ -77,7 +79,8 @@ public class RythmAndComboController : MonoBehaviour
 
     void Update()
     {
-        metronome.position = new Vector3(Mathf.InverseLerp(0, oneBeat, beatTimer) * 500 , metronome.position.y, metronome.position.z);
+        
+        metronome.position = new Vector3(Mathf.InverseLerp(0, oneBeat, beatTimer) * (metronome2.transform.position.x - metronome.transform.position.x), metronome.position.y, metronome.position.z);
 
         if (beatOn)
         {

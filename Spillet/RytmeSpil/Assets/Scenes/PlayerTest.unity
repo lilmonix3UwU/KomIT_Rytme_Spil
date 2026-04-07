@@ -3586,6 +3586,7 @@ MonoBehaviour:
   guitar3: {fileID: 1719151746}
   BPM: 120
   metronome: {fileID: 1828946949}
+  metronome2: {fileID: 419616682}
   greatIconT: {fileID: 610104514}
   okIconT: {fileID: 1961071269}
   yikesIconT: {fileID: 1767640163}
@@ -7529,7 +7530,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -7545,8 +7546,8 @@ Canvas:
   m_GameObject: {fileID: 1953587661}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 2013060959}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
