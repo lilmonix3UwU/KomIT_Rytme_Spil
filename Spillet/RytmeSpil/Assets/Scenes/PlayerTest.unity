@@ -3587,6 +3587,7 @@ MonoBehaviour:
   BPM: 120
   metronome: {fileID: 1828946949}
   metronome2: {fileID: 419616682}
+  metronomeIndicator: {fileID: 555011258}
   greatIconT: {fileID: 610104514}
   okIconT: {fileID: 1961071269}
   yikesIconT: {fileID: 1767640163}

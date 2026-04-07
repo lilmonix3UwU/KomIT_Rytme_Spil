@@ -31,6 +31,7 @@ public class RythmAndComboController : MonoBehaviour
     [SerializeField] float BPM = 90;
     [SerializeField] RectTransform metronome;
     [SerializeField] RectTransform metronome2;
+    [SerializeField] RectTransform metronomeIndicator;
     [SerializeField] GameObject greatIconT;
     [SerializeField] GameObject okIconT;
     [SerializeField] GameObject yikesIconT;
@@ -80,7 +81,7 @@ public class RythmAndComboController : MonoBehaviour
     void Update()
     {
         
-        metronome.position = new Vector3(Mathf.InverseLerp(0, oneBeat, beatTimer) * (metronome2.transform.position.x - metronome.transform.position.x), metronome.position.y, metronome.position.z);
+        metronome.position = new Vector3((Mathf.InverseLerp(0, oneBeat, beatTimer) * (metronome2.transform.position.x - metronome.transform.position.x)) + metronomeIndicator.position.x, metronome.position.y, metronome.position.z);
 
         if (beatOn)
         {
