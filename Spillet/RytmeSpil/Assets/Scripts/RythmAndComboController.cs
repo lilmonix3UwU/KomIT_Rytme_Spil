@@ -112,7 +112,7 @@ public class RythmAndComboController : MonoBehaviour
             }
             if (CompareCombos(currentCombo, l))
             {
-                guitar.damageMod = 1.5f;
+                guitar.damageMod = 2.5f;
             }
             hasAttackedThisBeat = TryAttack(guitar);
             currentAttackCooldown = guitar.animationTime;
