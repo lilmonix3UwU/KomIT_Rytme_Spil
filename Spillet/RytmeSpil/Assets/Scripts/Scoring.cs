@@ -14,6 +14,7 @@ public class Scoring : MonoBehaviour
     public List<GameObject> enemies;
 
     [SerializeField] TMP_Text text;
+    [SerializeField] TMP_Text scoringActive;
     [SerializeField] GameObject winScreen;
 
     float startTimer = 5;
@@ -34,6 +35,7 @@ public class Scoring : MonoBehaviour
 
     void Update()
     {
+        scoringActive.text = "Score: " + score;
         if (startTimer > 0)
         {
             startTimer -= Time.deltaTime;
