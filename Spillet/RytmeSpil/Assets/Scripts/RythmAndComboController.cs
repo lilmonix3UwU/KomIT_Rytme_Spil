@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -38,6 +39,7 @@ public class RythmAndComboController : MonoBehaviour
     [SerializeField] GameObject missIconT;
     [SerializeField] Animator animator;
     [SerializeField] NearByEnemies nearByEnemies;
+    [SerializeField] TMP_Text text;
 
     public bool metronomeSFXOn = true;
 
@@ -80,7 +82,7 @@ public class RythmAndComboController : MonoBehaviour
 
     void Update()
     {
-        
+        text.text = "Combo X" + comboCount;
         metronome.position = new Vector3((Mathf.InverseLerp(0, oneBeat, beatTimer) * (metronome2.transform.position.x - metronome.transform.position.x)) + metronomeIndicator.position.x, metronome.position.y, metronome.position.z);
 
         if (beatOn)
@@ -136,17 +138,61 @@ public class RythmAndComboController : MonoBehaviour
         else if (beatTimer < (oneBeat - (greatWindow + okWindow + yikesWindow)) && beatTimer > greatWindow + okWindow + yikesWindow && !toggle)
         {
             toggle = true;
+            if (comboCount == 1)
+            {
+                animator.SetInteger("Combo", 1);
+            }
+            if ((comboCount == 2 && currentCombo[1]) || (comboCount == 4 && currentCombo[3]) || comboCount == 0)
+            {
+                animator.SetInteger("Combo", 0);
+            }
+            if (comboCount == 2 && !currentCombo[1])
+            {
+                animator.SetInteger("Combo", 1);
+            }
+            if (comboCount == 3)
+            {
+                animator.SetInteger("Combo", 2);
+            }
+
             if (hasAttackedThisBeat)
             {
                 bool t = true;
                 currentCombo.Add(t);
-                comboCount++;
+                if (currentCombo.Count == 2)
+                {
+                    if (currentCombo[0] == true && currentCombo[1] == true)
+                    {
+                        currentCombo.Clear();
+                        comboCount = 1;
+                        bool f = true;
+                        currentCombo.Add(f);
+
+                    }
+                    else
+                    {
+                        comboCount++;
+                    }
+                        
+                }
+                else
+                {
+                    comboCount++;
+                }
+
             }
             else if (comboCount != 0)
             {
-                bool f = false;
-                currentCombo.Add(f);
-                comboCount++;
+                if (currentCombo[comboCount - 1])
+                {
+                    bool f = false;
+                    currentCombo.Add(f);
+                    comboCount++;
+                }
+                else
+                {
+                    validCombos.Clear();
+                }
             }
             for (int i = 0; i < validCombos.Count; i++)
             {
@@ -165,23 +211,6 @@ public class RythmAndComboController : MonoBehaviour
                 }
             }
 
-            if (comboCount == 1)
-            {
-                animator.SetInteger("Combo", 1);
-            }
-            if ((comboCount == 2 && currentCombo[1]) || (comboCount == 4 && currentCombo[3]))
-            {
-                animator.SetInteger("Combo", 0);
-            }
-            if (comboCount == 2 && !currentCombo[1])
-            {
-                animator.SetInteger("Combo", 1);
-            }
-            if (comboCount == 3)
-            {
-                animator.SetInteger("Combo", 2);
-            }
-
             if (validCombos.Count == 0)
             {
                 currentCombo.Clear();
@@ -192,13 +221,9 @@ public class RythmAndComboController : MonoBehaviour
                     validCombos.Add(temp);
                 }
                 animator.SetInteger("Combo", 0);
-                if (hasAttackedThisBeat)
-                {
-                    bool t = true;
-                    currentCombo.Add(t);
-                    comboCount++;
-                }
             }
+
+            Scoring.Instance.comboCounter = comboCount;
 
             if (validCombos.Count == 1)
             {
@@ -255,6 +280,7 @@ public class RythmAndComboController : MonoBehaviour
             //display GREAT particle
             weapon.AttackStart(greatMod);
             greatIconT.SetActive(true);
+            Scoring.Instance.CurrentHit = "GREAT";
             return true;
         }
         else if ( (beatTimer > (oneBeat - (greatWindow + okWindow))) || (beatTimer < (greatWindow + okWindow)) )
@@ -262,6 +288,7 @@ public class RythmAndComboController : MonoBehaviour
             //display OK particle
             weapon.AttackStart(okMod);
             okIconT.SetActive(true);
+            Scoring.Instance.CurrentHit = "OK";
             return true;
         }
         else if ((beatTimer > (oneBeat - (greatWindow + okWindow + yikesWindow))) || (beatTimer < (greatWindow + okWindow + yikesWindow)))
@@ -269,6 +296,7 @@ public class RythmAndComboController : MonoBehaviour
             //display YIKES particle
             weapon.AttackStart(yikesMod);
             yikesIconT.SetActive(true);
+            Scoring.Instance.CurrentHit = "YIKES";
             return true;
         }
         else
@@ -284,6 +312,7 @@ public class RythmAndComboController : MonoBehaviour
                 validCombos.Add(temp);
             }
             animator.SetInteger("Combo", 0);
+            Scoring.Instance.CurrentHit = "MISS";
             return false;
         }
     }

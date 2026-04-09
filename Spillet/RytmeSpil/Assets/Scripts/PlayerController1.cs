@@ -11,6 +11,7 @@ public class PlayerController1 : MonoBehaviour
     [SerializeField] float animationSpeedMod;
     [SerializeField] float jummpForce;
     [SerializeField] Animator animator;
+    [SerializeField] GameObject boostArrow;
     Rigidbody2D rb;
     List<float> negSpeedMods;
     float negSpeedMod = 1f;
@@ -46,7 +47,19 @@ public class PlayerController1 : MonoBehaviour
     void Update()
     {
 
-        
+        if (animator.GetBool("Attacking") && animator.speed != 2)
+        {
+            animator.speed = 2;
+        }
+        else if (animator.GetBool("Walking") && animator.speed != moveSpeed * animationSpeedMod && !animator.GetBool("Attacking"))
+        {
+            animator.speed = moveSpeed * animationSpeedMod;
+        }
+        else if (animator.speed != 1 && !animator.GetBool("Walking") && !animator.GetBool("Attacking"))
+        {
+            animator.speed = 1;
+        }
+
 
 
         if (canJump && groundCheck.isGrounded && Input.GetKeyDown(KeyCode.Space))
@@ -79,14 +92,11 @@ public class PlayerController1 : MonoBehaviour
         if ((rb.velocity.x < -0.5f || rb.velocity.x > 0.5f) && groundCheck.isGrounded)
         {
             animator.SetBool("Walking", true);
-            if (animator.speed != moveSpeed * animationSpeedMod)
-            {
-                animator.speed = moveSpeed * animationSpeedMod;
-            }
         }
         else if (animator.GetBool("Walking"))
         {
             animator.SetBool("Walking", false);
+            animator.speed = 1;
         }
 
 
@@ -102,11 +112,13 @@ public class PlayerController1 : MonoBehaviour
         }
         if (posSpeedMods.Count > 0)
         {
+            boostArrow.SetActive(true);
             posSpeedMods.Sort((x, y) => -x.CompareTo(y));
             posSpeedMod = posSpeedMods[0];
         }
         else
         {
+            boostArrow.SetActive(false);
             posSpeedMod = 1;
         }
 

@@ -30,6 +30,7 @@ public class Attack : MonoBehaviour
 
     public void AttackStart(float dMod)
     {
+        animator.SetBool("Attacking", true);
         localDMod = dMod;
         StartCoroutine(playerController.AddSpeedMod(0.01f, animationTime));
         StartCoroutine(playerController.Nudge(1000, delay, true));
@@ -38,18 +39,27 @@ public class Attack : MonoBehaviour
 
     private IEnumerator AttackSequence()
     {
-        animator.SetBool("Attacking", true);
         StartCoroutine(playerController.FallSlow(animationTime + delay));
 
         yield return new WaitForSeconds(delay);
         
         GetComponent<BoxCollider2D>().enabled = true;
         hitbox.SetActive(true);
-        
 
-        yield return new WaitForSeconds(animationTime - delay - 0.01f);
+        if (animator.GetInteger("Combo") == 0)
+        {
+            yield return new WaitForSeconds((0.767f * 0.5f) - delay);
+        }
+        if (animator.GetInteger("Combo") == 1)
+        {
+            yield return new WaitForSeconds((0.683f * 0.5f) - delay);
+        }
+        if (animator.GetInteger("Combo") == 2)
+        {
+            yield return new WaitForSeconds((0.683f * 0.5f) - delay);
+        }
         animator.SetBool("Attacking", false);
-        yield return new WaitForSeconds(0.01f);
+       
         GetComponent<BoxCollider2D>().enabled = false;
         hitbox.SetActive(false);
         if (damageMod > 1)
