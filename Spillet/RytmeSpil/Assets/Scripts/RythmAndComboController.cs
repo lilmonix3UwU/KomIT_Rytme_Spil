@@ -39,7 +39,11 @@ public class RythmAndComboController : MonoBehaviour
     [SerializeField] GameObject missIconT;
     [SerializeField] Animator animator;
     [SerializeField] NearByEnemies nearByEnemies;
-    [SerializeField] TMP_Text text;
+    [SerializeField] GameObject note1;
+    [SerializeField] GameObject note2;
+    [SerializeField] GameObject note3;
+    [SerializeField] GameObject note4;
+    [SerializeField] GameObject note5;
 
     public bool metronomeSFXOn = true;
 
@@ -82,7 +86,6 @@ public class RythmAndComboController : MonoBehaviour
 
     void Update()
     {
-        text.text = "Combo X" + comboCount;
         metronome.position = new Vector3((Mathf.InverseLerp(0, oneBeat, beatTimer) * (metronome2.transform.position.x - metronome.transform.position.x)) + metronomeIndicator.position.x, metronome.position.y, metronome.position.z);
 
         if (beatOn)
