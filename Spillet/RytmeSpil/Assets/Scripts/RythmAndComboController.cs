@@ -5,6 +5,7 @@ using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RythmAndComboController : MonoBehaviour
 {
@@ -39,11 +40,13 @@ public class RythmAndComboController : MonoBehaviour
     [SerializeField] GameObject missIconT;
     [SerializeField] Animator animator;
     [SerializeField] NearByEnemies nearByEnemies;
-    [SerializeField] GameObject note1;
-    [SerializeField] GameObject note2;
-    [SerializeField] GameObject note3;
-    [SerializeField] GameObject note4;
-    [SerializeField] GameObject note5;
+    [SerializeField] Image note1;
+    [SerializeField] Image note2;
+    [SerializeField] Image note3;
+    [SerializeField] Image note4;
+    [SerializeField] Image note5;
+    [SerializeField] Sprite note;
+    [SerializeField] Sprite line;
 
     public bool metronomeSFXOn = true;
 
@@ -62,6 +65,7 @@ public class RythmAndComboController : MonoBehaviour
     AudioSource metronomeAudioSource;
     PlayerController1 playerController;
     Camera cam;
+    List<Image> notes;
 
     void Start()
     {
@@ -72,6 +76,12 @@ public class RythmAndComboController : MonoBehaviour
         validCombos = new List<bool[]>();
         oneBeat = 60 / BPM;
         cam = Camera.main;
+        notes = new List<Image>();
+        notes.Add(note1);
+        notes.Add(note2);
+        notes.Add(note3);
+        notes.Add(note4);
+        notes.Add(note5);
 
         combos.Add(new bool[] { true, true, false, true });
         combos.Add(new bool[] { true, false, true, true });
@@ -161,7 +171,6 @@ public class RythmAndComboController : MonoBehaviour
             if (hasAttackedThisBeat)
             {
                 bool t = true;
-                currentCombo.Add(t);
                 if (currentCombo.Count == 2)
                 {
                     if (currentCombo[0] == true && currentCombo[1] == true)
@@ -182,7 +191,7 @@ public class RythmAndComboController : MonoBehaviour
                 {
                     comboCount++;
                 }
-
+                currentCombo.Add(t);
             }
             else if (comboCount != 0)
             {
@@ -274,6 +283,71 @@ public class RythmAndComboController : MonoBehaviour
         {
             missIconT.SetActive(false);
         }
+
+        if (currentCombo.Count > 0)
+        {
+            if (currentCombo.Count > 4)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    if (currentCombo[i])
+                    {
+                        notes[i].sprite = note;
+                    }
+                    else
+                    {
+                        notes[i].sprite = line;
+                    }
+                    if (i != 0)
+                    {
+                        notes[i].gameObject.SetActive(true);
+                    }
+                    
+                }
+                note1.gameObject.transform.localPosition = new Vector2(-70, 80);
+                note1.gameObject.SetActive(true);
+            }
+            else
+            {
+                float offset = 0;
+                for (int i = 0; i < currentCombo.Count; i++)
+                {
+                    if (currentCombo[i])
+                    {
+                        notes[i].sprite = note;
+                    }
+                    else
+                    {
+                        notes[i].sprite = line;
+                    }
+                    notes[i].gameObject.SetActive(true);
+
+                    if (i != 0)
+                    {
+                        notes[i].gameObject.SetActive(true);
+                        offset -= 17.5f;
+                    }
+
+                }
+                
+
+
+
+                note1.gameObject.transform.localPosition = new Vector2(offset, 80);
+                note1.gameObject.SetActive(true);
+            }
+
+        }
+        else if(note1.IsActive() || note2.IsActive() || note3.IsActive() || note4.IsActive() || note5.IsActive())
+        {
+            note1.gameObject.SetActive(false);
+            note2.gameObject.SetActive(false);
+            note3.gameObject.SetActive(false);
+            note4.gameObject.SetActive(false);
+            note5.gameObject.SetActive(false);
+        }
+
+
     }
 
     private bool TryAttack(Attack weapon)
