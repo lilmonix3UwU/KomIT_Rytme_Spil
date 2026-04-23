@@ -56,7 +56,7 @@ public class Attack : MonoBehaviour
         }
         if (animator.GetInteger("Combo") == 2)
         {
-            yield return new WaitForSeconds((0.683f * 0.5f) - delay);
+            yield return new WaitForSeconds((0.933f * 0.5f) - delay);
         }
         animator.SetBool("Attacking", false);
        
