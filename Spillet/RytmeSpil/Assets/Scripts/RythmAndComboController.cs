@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class RythmAndComboController : MonoBehaviour
 {
+    public static RythmAndComboController Instance;
+
     [Header("Weapons")]
     [SerializeField] Attack guitar;
     [SerializeField] Attack flute;
@@ -66,9 +68,11 @@ public class RythmAndComboController : MonoBehaviour
     PlayerController1 playerController;
     Camera cam;
     List<Image> notes;
+    List<Enemy> enemies;
 
     void Start()
     {
+        enemies = new List<Enemy>();
         playerController = GetComponent<PlayerController1>();
         metronomeAudioSource = GetComponent<AudioSource>();
         currentCombo = new List<bool>();
@@ -92,6 +96,13 @@ public class RythmAndComboController : MonoBehaviour
             validCombos.Add(temp);
         }
     }
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this);
+    }
 
 
     void Update()
@@ -110,7 +121,10 @@ public class RythmAndComboController : MonoBehaviour
                 metronomeAudioSource.Stop();
                 metronomeAudioSource.Play();
             }
-
+            foreach (Enemy e in enemies)
+            {
+                e.beat();
+            }
         }
 
         /*if (Input.GetKeyDown(KeyCode.J) && currentAttackCooldown <= 0)
