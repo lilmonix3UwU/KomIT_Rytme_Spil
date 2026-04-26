@@ -26,7 +26,7 @@ public class RythmAndComboController : MonoBehaviour
     [SerializeField] float comboPushForce = 5.0f;
 
     [Header("Sounds")]
-    [SerializeField] AudioSource baseBeat;
+    public AudioSource baseBeat;
     [SerializeField] AudioSource guitar1;
     [SerializeField] AudioSource guitar2;
     [SerializeField] AudioSource guitar3;
@@ -68,7 +68,7 @@ public class RythmAndComboController : MonoBehaviour
     PlayerController1 playerController;
     Camera cam;
     List<Image> notes;
-    List<Enemy> enemies;
+    public List<Enemy> enemies;
 
     void Start()
     {
@@ -111,6 +111,7 @@ public class RythmAndComboController : MonoBehaviour
 
         if (beatOn)
         {
+
             beatTimer += Time.deltaTime;
         }
         if (beatTimer >= oneBeat)
@@ -145,6 +146,15 @@ public class RythmAndComboController : MonoBehaviour
             }
             hasAttackedThisBeat = TryAttack(guitar);
             currentAttackCooldown = guitar.animationTime;
+            if (currentCombo.Count == 2)
+            {
+                if (currentCombo[0] == true && currentCombo[1] == true)
+                {
+                    currentCombo.Clear();
+                    comboCount = 0;
+                    note2.gameObject.SetActive(false);
+                }
+            }
             if (hasAttackedThisBeat)
             {
                 if (comboCount == 0)
@@ -185,26 +195,7 @@ public class RythmAndComboController : MonoBehaviour
             if (hasAttackedThisBeat)
             {
                 bool t = true;
-                if (currentCombo.Count == 2)
-                {
-                    if (currentCombo[0] == true && currentCombo[1] == true)
-                    {
-                        currentCombo.Clear();
-                        comboCount = 1;
-                        bool f = true;
-                        currentCombo.Add(f);
-
-                    }
-                    else
-                    {
-                        comboCount++;
-                    }
-                        
-                }
-                else
-                {
-                    comboCount++;
-                }
+                comboCount++;
                 currentCombo.Add(t);
             }
             else if (comboCount != 0)

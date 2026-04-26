@@ -78,12 +78,12 @@ public class PlayerController1 : MonoBehaviour
             animator.SetBool("OnGround", false);
         }
 
-        if (rb.velocity.x > 0.5f && !facingRight)
+        if (Input.GetAxisRaw("Horizontal") > 0 && !facingRight && !animator.GetBool("Attacking"))
         {
             facingRight = true;
             transform.localScale = new Vector3(1, 1, 1);
         }
-        else if (rb.velocity.x < -0.5f && facingRight)
+        else if (Input.GetAxisRaw("Horizontal") < 0 && facingRight && !animator.GetBool("Attacking"))
         {
             facingRight = false;
             transform.localScale = new Vector3(-1, 1, 1);

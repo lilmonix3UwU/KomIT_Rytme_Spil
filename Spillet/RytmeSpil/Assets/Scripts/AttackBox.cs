@@ -9,7 +9,7 @@ public class AttackBox : MonoBehaviour
     {
         if (collision.CompareTag("Player") && enemy.playerDetectedInAttackRange == false)
         {
-            enemy.playerDetectedInAttackRange = false;
+            enemy.playerDetectedInAttackRange = true;
         }
     }
     

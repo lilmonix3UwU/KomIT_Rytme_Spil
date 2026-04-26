@@ -1,26 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.WSA;
 
 public class Enemy : MonoBehaviour
 {
     public float HP;
+    [SerializeField] int dmg;
+    [SerializeField] float knockback;
     [SerializeField] float speed;
     [SerializeField] float huntingSpeed;
+    [SerializeField] float LaunchForce;
     [SerializeField] TMP_Text dmgText;
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] Animator animator;
     [SerializeField] PlayerDetector playerDetector;
+    [SerializeField] EnemyHurtBox FUCKBOX;
     AudioSource hitSFX;
     bool dying = false;
     bool once = true;
     bool hurting = false;
     float currentHurtTime = 0;
     bool attacking = false;
-    float currentAttackTime = 0;
     bool hunting = false;
     public bool hitWall = false;
     public bool playerDetectedInAttackRange = false;
@@ -32,6 +37,7 @@ public class Enemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         hitSFX = GetComponent<AudioSource>();
+        
     }
 
     private void Update()
@@ -40,6 +46,7 @@ public class Enemy : MonoBehaviour
         {
             Scoring.Instance.enemies.Add(gameObject);
             player = Scoring.Instance.gameObject;
+            RythmAndComboController.Instance.enemies.Add(this);
             once = false;
         }
 
@@ -55,7 +62,6 @@ public class Enemy : MonoBehaviour
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, player.transform.position - transform.position);
                 if (hit.collider != null)
                 {
-                    Debug.Log(hit.collider);
                     if (hit.collider.CompareTag("Player"))
                     {
                         hunting = true;
@@ -75,11 +81,11 @@ public class Enemy : MonoBehaviour
                 transform.localScale = new Vector3(-transform.localScale.x, 1, 1);
             }
 
-            if (currentAttackTime <= 0 && currentHurtTime <= 0 && !hunting)
+            if (!attacking && currentHurtTime <= 0 && !hunting)
             {
                 transform.position += new Vector3(-transform.localScale.x * speed * Time.deltaTime * 0.1f, 0, 0);
             }
-            else if (hunting && currentAttackTime <= 0 && currentHurtTime <= 0)
+            else if (hunting && !attacking && currentHurtTime <= 0)
             {
                 if (transform.position.x < player.transform.position.x)
                 {
@@ -99,24 +105,13 @@ public class Enemy : MonoBehaviour
                 }
                 
             }
-            else if (currentAttackTime > 0 && currentHurtTime <= 0)
-            {
-                currentAttackTime -= Time.deltaTime;
-                animator.SetBool("Attacking", true);
-            }
             else if (currentHurtTime > 0)
             {
-                currentAttackTime = 0;
+                attacking = false;
                 currentHurtTime -= Time.deltaTime;
                 animator.SetBool("Hurting", true);
             }
 
-
-            if (currentAttackTime <= 0 && attacking)
-            {
-                animator.SetBool("Attacking", false);
-                hurting = false;
-            }
             if (currentHurtTime <= 0 && hurting)
             {
                 animator.SetBool("Hurting", false);
@@ -125,7 +120,14 @@ public class Enemy : MonoBehaviour
         }
 
 
-
+        if (transform.localScale.x > 0)
+        {
+            dmgText.gameObject.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        }
+        else if (transform.localScale.x < 0)
+        {
+            dmgText.gameObject.transform.localScale = new Vector3(-0.1f, 0.1f, 0.1f);
+        }
     }
     public IEnumerator TakeDamage(float damage)
     {
@@ -133,6 +135,7 @@ public class Enemy : MonoBehaviour
             yield break;
         hurting = true;
         currentHurtTime = 0.5f;
+        StartCoroutine(flicker());
         hitSFX.Stop();
         hitSFX.Play();
         HP -= damage;
@@ -151,10 +154,77 @@ public class Enemy : MonoBehaviour
     }
     public void beat()
     {
-        if (playerDetectedInAttackRange && currentAttackTime <= 0 && currentHurtTime <= 0)
+        if (playerDetectedInAttackRange && !attacking && currentHurtTime <= 0)
         {
-            attacking = true;
-            currentAttackTime = 2;
+            StartCoroutine(Attack());
         }
+    }
+    private IEnumerator Attack()
+    {
+        bool right = true;
+        attacking = true;
+        animator.SetBool("Attacking", true);
+        if (player.transform.position.x < transform.position.x)
+        {
+            right = true;
+        }
+        if (player.transform.position.x > transform.position.x)
+        {
+            right= false;
+        }
+        yield return new WaitForSeconds(0.5f);
+        if (!attacking)
+        {
+            animator.SetBool("Attacking", false);
+            yield break;
+        }
+        if (right)
+        {
+            rb.AddForce(-Vector2.right * LaunchForce, ForceMode2D.Impulse);
+        }
+        if (!right)
+        {
+            rb.AddForce(Vector2.right * LaunchForce, ForceMode2D.Impulse);
+        }
+        yield return new WaitForSeconds(0.5f);
+        rb.velocity = Vector2.zero;
+        if (!attacking)
+        {
+            animator.SetBool("Attacking", false);
+            yield break;
+        }
+        if (FUCKBOX.playerinFUCKBox)
+        {
+            player.GetComponent<PlayerHP>().Damage(dmg);
+            player.GetComponent<PlayerController1>().enabled = false;
+            if (!right)
+            {
+                Debug.Log("aaa");
+                player.GetComponent<Rigidbody2D>().AddForce(Vector2.right * knockback, ForceMode2D.Impulse);
+            }
+            if (right)
+            {
+                Debug.Log("eeee");
+                player.GetComponent<Rigidbody2D>().AddForce(-Vector2.right * knockback, ForceMode2D.Impulse);
+            }
+        }
+        yield return new WaitForSeconds(0.1f);
+        player.GetComponent<PlayerController1>().enabled = true;
+        animator.SetBool("Attacking", false);
+        yield return new WaitForSeconds(0.5f);
+        attacking = false;
+        
+    }
+    private IEnumerator flicker()
+    {
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.125f);
+        spriteRenderer.color = new Color(1, 0.5f, 0.5f);
+        yield return new WaitForSeconds(0.125f);
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.125f);
+        spriteRenderer.color = new Color(1, 0.5f, 0.5f);
+        yield return new WaitForSeconds(0.125f);
+        spriteRenderer.color = Color.white;
     }
 }
