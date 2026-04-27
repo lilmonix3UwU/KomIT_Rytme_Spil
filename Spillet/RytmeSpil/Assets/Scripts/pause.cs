@@ -18,6 +18,10 @@ public class pause : MonoBehaviour
         {
             if (menu.activeInHierarchy)
             {
+                if (!RythmAndComboController.Instance.baseBeat.isPlaying)
+                {
+                    StartCoroutine(FUCK());
+                }
                 menu.SetActive(false);
                 Time.timeScale = 1;
                 RythmAndComboController.Instance.baseBeat.UnPause();
@@ -29,5 +33,10 @@ public class pause : MonoBehaviour
                 RythmAndComboController.Instance.baseBeat.Pause();
             }
         }
+    }
+    private IEnumerator FUCK()
+    {
+        yield return new WaitForSeconds(0.4f);
+        RythmAndComboController.Instance.baseBeat.Play();
     }
 }
