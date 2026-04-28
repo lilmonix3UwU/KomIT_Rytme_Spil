@@ -183,11 +183,6 @@ public class Enemy : MonoBehaviour
         }
         yield return new WaitForSeconds(0.5f);
         rb.velocity = Vector2.zero;
-        if (!attacking)
-        {
-            animator.SetBool("Attacking", false);
-            yield break;
-        }
         if (FUCKBOX.playerinFUCKBox)
         {
             player.GetComponent<PlayerHP>().Damage(dmg);

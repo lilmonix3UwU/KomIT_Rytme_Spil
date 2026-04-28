@@ -14,7 +14,6 @@ public class Attack : MonoBehaviour
     [SerializeField] AudioSource hit1;
     [SerializeField] AudioSource hit2;
     [SerializeField] AudioSource hit3;
-    [SerializeField] GameObject hitbox;
     [SerializeField] float pushForce = 5;
 
     private void Start()
@@ -44,7 +43,6 @@ public class Attack : MonoBehaviour
         yield return new WaitForSeconds(delay);
         
         GetComponent<BoxCollider2D>().enabled = true;
-        hitbox.SetActive(true);
 
         if (animator.GetInteger("Combo") == 0)
         {
@@ -61,7 +59,6 @@ public class Attack : MonoBehaviour
         animator.SetBool("Attacking", false);
        
         GetComponent<BoxCollider2D>().enabled = false;
-        hitbox.SetActive(false);
         if (damageMod > 1)
         {
             damageMod = 1;
