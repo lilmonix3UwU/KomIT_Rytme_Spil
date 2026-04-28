@@ -5,6 +5,8 @@ using UnityEngine;
 public class pause : MonoBehaviour
 {
     [SerializeField] GameObject menu;
+    [SerializeField] GameObject WinMenu;
+    [SerializeField] GameObject LoseMenu;
     private void Start()
     {
         menu.SetActive(true);
@@ -16,7 +18,7 @@ public class pause : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            if (menu.activeInHierarchy)
+            if (menu.activeInHierarchy && !WinMenu.activeInHierarchy && !LoseMenu.activeInHierarchy)
             {
                 if (!RythmAndComboController.Instance.baseBeat.isPlaying)
                 {
@@ -26,7 +28,7 @@ public class pause : MonoBehaviour
                 Time.timeScale = 1;
                 RythmAndComboController.Instance.baseBeat.UnPause();
             }
-            else if (!menu.activeInHierarchy)
+            else if (!menu.activeInHierarchy && !WinMenu.activeInHierarchy && !LoseMenu.activeInHierarchy)
             {
                 menu.SetActive(true);
                 Time.timeScale = 0;
