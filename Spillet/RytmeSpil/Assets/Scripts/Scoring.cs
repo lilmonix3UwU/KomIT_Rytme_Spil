@@ -48,6 +48,7 @@ public class Scoring : MonoBehaviour
                 Time.timeScale = 0;
                 text.text = "YOU WIN\nYOUR SCORE IS:\n" + score;
                 winScreen.SetActive(true);
+                RythmAndComboController.Instance.baseBeat.Pause();
                 once = false;
             }
         }

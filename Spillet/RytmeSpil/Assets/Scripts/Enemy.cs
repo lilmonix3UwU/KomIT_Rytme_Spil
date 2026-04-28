@@ -130,9 +130,9 @@ public class Enemy : MonoBehaviour
             yield break;
         hurting = true;
         currentHurtTime = 0.5f;
-        StartCoroutine(flicker());
         hitSFX.Stop();
         hitSFX.Play();
+        StartCoroutine(flicker());
         HP -= damage;
         Scoring.Instance.EnemyHit();
         dmgText.text = damage.ToString();

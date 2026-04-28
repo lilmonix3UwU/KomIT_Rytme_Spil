@@ -23,6 +23,7 @@ public class PlayerHP : MonoBehaviour
         {
             Time.timeScale = 0;
             loseScreen.SetActive(true);
+            RythmAndComboController.Instance.baseBeat.Pause();
         }
     }
     private IEnumerator flicker()
