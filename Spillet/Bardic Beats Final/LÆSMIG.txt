@@ -1,0 +1,2 @@
+måden hvorpå man åbner spillet er ved at køre "RytmeSpil" filen med unitys logo.
+det kan gøres ved at dobbelt klikke på den.
